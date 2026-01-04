@@ -2,7 +2,7 @@ import aiohttp
 import asyncio
 from bs4 import BeautifulSoup
 
-from clogger import Clogger
+from utils.clogger import Clogger
 
 DAILY_URL = "https://lospec.com/dailies/"
 PALLET_LIST_URL = "https://lospec.com/palette-list/"

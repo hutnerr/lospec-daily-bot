@@ -41,7 +41,7 @@ class SaveLoad:
                     if serverID:
                         configs[serverID] = data
                     else:
-                        Clogger.error(f"Server config file {filename} is missing 'serverID' field.")
+                        Clogger.warn(f"Server config file {filename} is missing 'serverID' field.")
                         continue
                 
                     config = ServerConfig.fromDict(data)

@@ -15,12 +15,15 @@ class Client(commands.Bot):
         
         self.cogslist = [
             "cogs.core",
-            # "cogs.looper",
+            "cogs.looper",
         ]
         
         # loads all server data on startup. returns a dict with serverID string as key
         # and value of ServerConfig object
         self.serverConfigs = SaveLoad.loadData()
+        
+        Clogger.debugEnabled = True
+        Clogger.useTimestamps = True
 
     async def setup_hook(self) -> None:
         for ext in self.cogslist:

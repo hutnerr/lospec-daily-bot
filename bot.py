@@ -6,6 +6,7 @@ from colorama import Back, Fore, Style
 from discord.ext import commands
 
 from utils.clogger import Clogger
+from utils.save_load import SaveLoad
 
 class Client(commands.Bot):
     def __init__(self):
@@ -13,9 +14,13 @@ class Client(commands.Bot):
         super().__init__(command_prefix = commands.when_mentioned_or("/"), intents = intents)
         
         self.cogslist = [
-            # "cogs.core",
+            "cogs.core",
             # "cogs.looper",
         ]
+        
+        # loads all server data on startup. returns a dict with serverID string as key
+        # and value of ServerConfig object
+        self.serverConfigs = SaveLoad.loadData()
 
     async def setup_hook(self) -> None:
         for ext in self.cogslist:

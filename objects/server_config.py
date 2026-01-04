@@ -1,20 +1,20 @@
 class ServerConfig:
-    def __init__(self, serverID: str, postingChannelID: str, active: bool):
+    def __init__(self, serverID: str, channelID: str, enabled: bool):
         self.serverID: str = serverID
-        self.postingChannelID: str = postingChannelID
-        self.active: bool = active
+        self.channelID: str = channelID
+        self.enabled: bool = enabled
 
     @staticmethod
     def fromDict(data: dict):
         return ServerConfig(
             serverID = data.get("serverID", ""),
-            postingChannelID = data.get("postingChannelID", ""),
-            active = data.get("active", False)
+            channelID = data.get("channelID", ""),
+            enabled = data.get("enabled", False)
         )
     
     def toDict(self) -> dict:
         return {
             "serverID": self.serverID,
-            "postingChannelID": self.postingChannelID,
-            "active": self.active
+            "channelID": self.channelID,
+            "enabled": self.enabled
         }

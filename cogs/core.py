@@ -3,45 +3,59 @@ from discord import app_commands
 from discord.ext import commands
 
 from utils.clogger import Clogger
+from utils.save_load import SaveLoad
+from objects.server_config import ServerConfig
+
+# TODO: Change the messages to useful embeds. Fill out the rest of the info.
 
 class CoreCog(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client: commands.Bot = client
         self.serverConfigs: dict = client.serverConfigs
 
-    async def generateServerConfig(self, serverID: str):
-        # will be used on an else statement where we fail to get a server config
-        # because none exists
-        pass
+    async def generateServerConfig(self, serverID: str, channelID: int) -> None:
+        config = ServerConfig(serverID=serverID, channelID=channelID, enabled=True)
+        self.serverConfigs[serverID] = config
+        SaveLoad.saveData(self.serverConfigs, serverID)
 
     # setchannel: command to set the channel for bot messages
     @app_commands.command(name='set_channel', description='Sets the output channel for bot messages')
     async def setChannel(self, interaction: discord.Interaction):
-        # 1. get the current channel
-        # 2. try and get the server config for this server
-        # 3. if it doesn't exist, create it
-        # 4. set the channel ID in the server config
-        # 5. save the server config
-        pass
+        serverID = str(interaction.guild_id)
+        channelID = interaction.channel_id
+
+        if serverID not in self.serverConfigs:
+            await self.generateServerConfig(serverID, channelID)
+
+        self.serverConfigs[serverID].channelID = channelID
+        SaveLoad.saveData(self.serverConfigs, serverID)
+
+        await interaction.response.send_message(f"Set bot messages channel to <#{channelID}>", ephemeral=True)
 
     # toggle: enables / disables the bot messages for the set channel
     @app_commands.command(name='toggle', description='Enables or disables the bot messages for the set channel')
     async def toggle(self, interaction: discord.Interaction):
-        # 1. try and get the server config for this server
-        # 2. if it doesn't exist, create it
-        # 3. toggle the enabled state
-        # 4. save the server config
-        pass
+        serverID = str(interaction.guild_id)
+
+        if serverID not in self.serverConfigs:
+            await self.generateServerConfig(serverID, interaction.channel_id)
+
+        currentStatus = self.serverConfigs[serverID].enabled
+        self.serverConfigs[serverID].enabled = not currentStatus
+        SaveLoad.saveData(self.serverConfigs, serverID)
+
+        statusText = "enabled" if not currentStatus else "disabled"
+        await interaction.response.send_message(f"Bot messages have been {statusText} for this server.", ephemeral=True)
 
     # about: notes that this is not affiliated with lospec in any way. links to github, maybe kofi
     @app_commands.command(name='about', description='Displays information about the bot & it\'s purpose')
     async def about(self, interaction: discord.Interaction):
-        pass
+        await interaction.response.send_message("testing !!!")
 
     # help: displays the simple help message for the bot
     @app_commands.command(name='help', description='Displays help information for the bot')
     async def help(self, interaction: discord.Interaction):
-        pass
+        await interaction.response.send_message("testing !!!@!@!@!@!@!!")
 
     @setChannel.error
     @toggle.error

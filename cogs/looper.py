@@ -6,6 +6,8 @@ from utils.clogger import Clogger
 from utils.data_getter import getDailyData
 from objects.server_config import ServerConfig
 
+# TODO: Change the messages to useful embeds. Fill out the rest of the info.
+
 class Looper(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client 
@@ -25,8 +27,8 @@ class Looper(commands.Cog):
         hour = int(time.strftime('%H'))
         minute = int(time.strftime('%M'))
         
-        # minute = 0
-        # hour = 12
+        minute = 0
+        hour = 12
 
         Clogger.debug(f"Main loop check at {hour}:{minute} UTC")
 

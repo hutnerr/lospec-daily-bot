@@ -8,6 +8,7 @@ from utils.data_getter import getDailyData
 from objects.server_config import ServerConfig
 
 # TODO: Change the messages to useful embeds. Fill out the rest of the info.
+IMG_URL = "https://cdn.lospec.com/thumbnails/palette-list/REPLACEME-social.png"
 
 class Looper(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -58,10 +59,11 @@ class Looper(commands.Cog):
             color=discord.Color.blue(),
         )
         embed.set_footer(text="Use /toggle to enable/disable daily posts.")
-        # embed.set_image(url=palleteURL)
-        # FIXME: https://cdn.lospec.com/thumbnails/palette-list/obsidian-social.png
-        # use the thumbnail image 
 
+        slug = palleteURL.split("/")[-1]
+        img_url = IMG_URL.replace("REPLACEME", slug)
+        embed.set_thumbnail(url=img_url)
+        
         for serverConfig in activeServers:
             channel = self.client.get_channel(serverConfig.channelID)
             if channel is None:

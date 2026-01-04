@@ -1,4 +1,5 @@
 import time
+import discord
 
 from discord.ext import commands, tasks
 from utils.save_load import SaveLoad
@@ -50,14 +51,24 @@ class Looper(commands.Cog):
             sc for sc in self.serverConfigs.values() if sc.enabled and sc.channelID is not None
         ]
 
+        embed = discord.Embed(
+            title="Lospec Daily",
+            url="https://lospec.com/dailies/",
+            description=f"Today's topic is **{topic}**!\nThe daily palette is [{palleteURL.split('/')[-1].title().replace('-', ' ').replace('_', ' ')}]({palleteURL})",
+            color=discord.Color.blue(),
+        )
+        embed.set_footer(text="Use /toggle to enable/disable daily posts.")
+        # embed.set_image(url=palleteURL)
+        # FIXME: https://cdn.lospec.com/thumbnails/palette-list/obsidian-social.png
+        # use the thumbnail image 
+
         for serverConfig in activeServers:
             channel = self.client.get_channel(serverConfig.channelID)
             if channel is None:
                 Clogger.warn(f"Could not find channel ID {serverConfig.channelID} for server {serverConfig.serverID}")
                 continue
-
             try:
-                await channel.send(f"Topic: {topic}\nPalette URL: {palleteURL}")
+                await channel.send(embed=embed)
                 Clogger.info(f"Sent daily post to server {serverConfig.serverID} in channel {serverConfig.channelID}")
             except Exception as e:
                 Clogger.warn(f"Failed to send message to server {serverConfig.serverID} in channel {serverConfig.channelID}: {str(e)}")

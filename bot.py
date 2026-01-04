@@ -36,13 +36,11 @@ class Client(commands.Bot):
         Clogger.info(f"Slash CMDs Synced {Fore.YELLOW}{str(len(synced))}{Style.RESET_ALL}")
         await client.change_presence(activity = discord.Activity(type = discord.ActivityType.playing, name = "/help for commands"))
 
-client = Client()
-client.remove_command("help") # remove default help so I can add custom one. 
+if __name__ == "__main__":
+    client = Client()
+    client.remove_command("help") # remove default help so I can add custom one. 
 
-# key = "testkey"
-key = "key"
+    with open("data/key.json", "r") as file:
+        key = json.load(file)["key"]
 
-with open("data/key.json", "r") as file:
-    key = json.load(file)[key]
-
-client.run(key)
+    client.run(key)

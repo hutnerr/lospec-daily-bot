@@ -1,0 +1,1 @@
+# lospec-daily-bot

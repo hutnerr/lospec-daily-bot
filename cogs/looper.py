@@ -1,5 +1,6 @@
 import time
 import discord
+import os
 
 from discord.ext import commands, tasks
 from utils.save_load import SaveLoad
@@ -7,8 +8,8 @@ from utils.clogger import Clogger
 from utils.data_getter import getDailyData
 from objects.server_config import ServerConfig
 
-# TODO: Change the messages to useful embeds. Fill out the rest of the info.
 IMG_URL = "https://cdn.lospec.com/thumbnails/palette-list/REPLACEME-social.png"
+IMGPATH = os.path.join("assets", "lospec.png")
 
 class Looper(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -55,14 +56,15 @@ class Looper(commands.Cog):
         embed = discord.Embed(
             title="Lospec Daily",
             url="https://lospec.com/dailies/",
-            description=f"Today's topic is **{topic}**!\nThe daily palette is [{palleteURL.split('/')[-1].title().replace('-', ' ').replace('_', ' ')}]({palleteURL})",
+            description=f"Topic: **{topic}**!\nPalette: [{palleteURL.split('/')[-1].title().replace('-', ' ').replace('_', ' ')}]({palleteURL})",
             color=discord.Color.blue(),
         )
         embed.set_footer(text="Use /toggle to enable/disable daily posts.")
+        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/48259315?s=200&v=4")
 
         slug = palleteURL.split("/")[-1]
-        img_url = IMG_URL.replace("REPLACEME", slug)
-        embed.set_thumbnail(url=img_url)
+        imgURL = IMG_URL.replace("REPLACEME", slug)
+        embed.set_image(url=imgURL)
         
         for serverConfig in activeServers:
             channel = self.client.get_channel(serverConfig.channelID)

@@ -8,6 +8,10 @@ from utils.save_load import SaveLoad
 
 IMGPATH = os.path.join("assets", "lospec.png")
 
+# 10:00 AM EST daily
+DESIRED_HOUR = 10
+DESIRED_MINUTE = 0
+
 class Looper(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client 
@@ -27,13 +31,11 @@ class Looper(commands.Cog):
         hour = int(time.strftime('%H'))
         minute = int(time.strftime('%M'))
         
-        # minute = 0
-        # hour = 12
-        Clogger.debug(f"Main loop check at {hour}:{minute} UTC")
-
-        if minute != 0 and hour != 12:
-            # only run at the top of the hour
-            # only run at noon
+        # minute = DESIRED_MINUTE
+        # hour = DESIRED_HOUR
+        Clogger.debug(f"Main loop check at {hour}:{minute} EST")
+        
+        if minute != DESIRED_MINUTE or hour != DESIRED_HOUR:
             Clogger.debug("Not the scheduled time for daily posts, skipping...")
             return
             

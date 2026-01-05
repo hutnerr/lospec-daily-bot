@@ -1,14 +1,11 @@
-import time
-import discord
 import os
+import time
 
 from discord.ext import commands, tasks
-from utils.save_load import SaveLoad
-from utils.clogger import Clogger
-from utils.data_getter import getDailyData
-from objects.server_config import ServerConfig
 
-IMG_URL = "https://cdn.lospec.com/thumbnails/palette-list/REPLACEME-social.png"
+from utils.clogger import Clogger
+from utils.save_load import SaveLoad
+
 IMGPATH = os.path.join("assets", "lospec.png")
 
 class Looper(commands.Cog):
@@ -32,7 +29,6 @@ class Looper(commands.Cog):
         
         minute = 0
         hour = 12
-
         Clogger.debug(f"Main loop check at {hour}:{minute} UTC")
 
         if minute != 0 and hour != 12:
@@ -43,29 +39,18 @@ class Looper(commands.Cog):
             
         Clogger.info("Running main loop for daily posts")
 
-        data = await getDailyData()
-        if data is None:
-            Clogger.error("Failed to get daily data")
+        coreCog = self.client.get_cog("CoreCog")
+        if coreCog is None:
+            Clogger.error("CoreCog not found, cannot build daily data embed")
             return
-
-        topic, palleteURL = data
-        activeServers = [
-            sc for sc in self.serverConfigs.values() if sc.enabled and sc.channelID is not None
-        ]
-
-        embed = discord.Embed(
-            title="Lospec Daily",
-            url="https://lospec.com/dailies/",
-            description=f"Topic: **{topic}**!\nPalette: [{palleteURL.split('/')[-1].title().replace('-', ' ').replace('_', ' ')}]({palleteURL})",
-            color=discord.Color.blue(),
-        )
-        embed.set_footer(text="Use /toggle to enable/disable daily posts.")
-        embed.set_thumbnail(url="https://avatars.githubusercontent.com/u/48259315?s=200&v=4")
-
-        slug = palleteURL.split("/")[-1]
-        imgURL = IMG_URL.replace("REPLACEME", slug)
-        embed.set_image(url=imgURL)
         
+        embed = await coreCog.buildDataEmbed()
+        if embed is None:
+            Clogger.error("Failed to build daily data embed, skipping daily posts")
+            return
+        
+        embed.set_footer(text="Use /toggle to enable/disable daily posts.")
+        activeServers = [sc for sc in self.serverConfigs.values() if sc.enabled and sc.channelID is not None]
         for serverConfig in activeServers:
             channel = self.client.get_channel(serverConfig.channelID)
             if channel is None:
@@ -73,7 +58,7 @@ class Looper(commands.Cog):
                 continue
             try:
                 await channel.send(embed=embed)
-                Clogger.info(f"Sent daily post to server {serverConfig.serverID} in channel {serverConfig.channelID}")
+                Clogger.debug(f"Sent daily post to server {serverConfig.serverID} in channel {serverConfig.channelID}")
             except Exception as e:
                 Clogger.warn(f"Failed to send message to server {serverConfig.serverID} in channel {serverConfig.channelID}: {str(e)}")
 

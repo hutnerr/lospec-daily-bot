@@ -27,8 +27,8 @@ class Looper(commands.Cog):
         hour = int(time.strftime('%H'))
         minute = int(time.strftime('%M'))
         
-        minute = 0
-        hour = 12
+        # minute = 0
+        # hour = 12
         Clogger.debug(f"Main loop check at {hour}:{minute} UTC")
 
         if minute != 0 and hour != 12:

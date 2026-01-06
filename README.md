@@ -1,5 +1,5 @@
 # Overview
-This is a discord bot that provides the <a href="https://lospec.com/dailies/">Lospec Daily</a> to a server. 
+This is a discord bot that provides the <a href="https://lospec.com/dailies/">Lospec Daily</a> to a server. More about the bot <a href="https://www.hunter-baker.com/pages/projects/lospec-bot.html">here.</a>
 
 This bot is not affiliated with Lospec in any way. It was just a project to help my friends and I improve our pixel art so we can make better games. 
 

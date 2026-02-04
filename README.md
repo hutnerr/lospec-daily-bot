@@ -1,16 +1,31 @@
-# Overview
-This is a discord bot that provides the <a href="https://lospec.com/dailies/">Lospec Daily</a> to a server. More about the bot <a href="https://www.hunter-baker.com/pages/projects/lospec-bot.html">here.</a>
+## Overview
+This Discord bot automatically posts the daily prompt and palette from [Lospec Daily](https://lospec.com/dailies/) to a server, making it easy for consistent pixel art practice.
 
-This bot is not affiliated with Lospec in any way. It was just a project to help my friends and I improve our pixel art so we can make better games. 
+This is a personal project and has no official affiliation with Lospec.  
+The project is licensed under the MIT License.
 
-<strong>Commands:</strong>
-<ul>
-  <li><code>/getdailydata</code> - Posts the Lospec daily directly.</li>
-  <li><code>/toggle</code> - Enables or disables the daily loop messages.</li>
-  <li><code>/setchannel</code> - Sets the output channel for the loop messages.</li>
-  <li><code>/serverconfig</code> - Displays the current config for the bot.</li>
-  <li><code>/about</code> - Displays info about the bot and its purpose.</li>
-  <li><code>/help</code> - Displays the command list and other help info.</li>
-</ul>
+## Links
+- [More Information](https://www.hunter-baker.com/pages/projects/lospec-bot.html)
+- [Invite Link](https://discord.com/oauth2/authorize?client_id=1457439367500009597&permissions=2147485696&integration_type=0&scope=bot)
 
-<img width="570" height="431" alt="image" src="https://github.com/user-attachments/assets/35636abb-bc5e-4a22-a790-ed0032373dbc" />
+## Commands
+> To activate the bot, use `/setchannel` in the channel you want the bot to post to.
+
+- `/getdailydata` - Posts the current Lospec Daily challenge.
+- `/toggle` - Enables or disables automatic daily postings.
+- `/setchannel` - Sets the channel where daily challenges are posted.
+- `/serverconfig` - Displays the current server configuration.
+- `/about` - Displays information about the bot.
+- `/help` - Displays the command list and usage information.
+
+## Setup
+To set this up locally, you would need to provide your own Discord key. You would have to have a `key.json` file within the data folder in root. You also would need to `pip install -r requirements.txt` which is also located in root.
+
+```json
+{
+  "key": "DISCORD_API_KEY_GOES_HERE",
+}
+```
+
+## Showcase
+<img width="570" height="431" alt="Example of Lospec Daily posted in Discord" src="https://github.com/user-attachments/assets/35636abb-bc5e-4a22-a790-ed0032373dbc"/>

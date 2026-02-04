@@ -4,6 +4,8 @@ This Discord bot automatically posts the daily prompt and palette from [Lospec D
 This is a personal project and has no official affiliation with Lospec.  
 The project is licensed under the MIT License.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S71TM9XT)
+
 ## Links
 - [More Information](https://www.hunter-baker.com/pages/projects/lospec-bot.html)
 - [Invite Link](https://discord.com/oauth2/authorize?client_id=1457439367500009597&permissions=2147485696&integration_type=0&scope=bot)

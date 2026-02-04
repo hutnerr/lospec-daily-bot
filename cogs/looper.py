@@ -33,10 +33,10 @@ class Looper(commands.Cog):
         
         # minute = DESIRED_MINUTE
         # hour = DESIRED_HOUR
-        Clogger.debug(f"Main loop check at {hour}:{minute} EST")
+        # Clogger.debug(f"Main loop check at {hour}:{minute} EST")
         
         if minute != DESIRED_MINUTE or hour != DESIRED_HOUR:
-            Clogger.debug("Not the scheduled time for daily posts, skipping...")
+            # Clogger.debug("Not the scheduled time for daily posts, skipping...")
             return
             
         Clogger.info("Running main loop for daily posts")
@@ -60,7 +60,7 @@ class Looper(commands.Cog):
                 continue
             try:
                 await channel.send(embed=embed)
-                Clogger.debug(f"Sent daily post to server {serverConfig.serverID} in channel {serverConfig.channelID}")
+                # Clogger.debug(f"Sent daily post to server {serverConfig.serverID} in channel {serverConfig.channelID}")
             except Exception as e:
                 Clogger.warn(f"Failed to send message to server {serverConfig.serverID} in channel {serverConfig.channelID}: {str(e)}")
 

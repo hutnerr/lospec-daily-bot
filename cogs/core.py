@@ -102,7 +102,7 @@ class CoreCog(commands.Cog):
     async def help(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title="Bot Help",
-            description="This bot posts the Lospec Daily Tag & Palette to a designated channel once a day at noon.\n\n",
+            description="This bot posts the Lospec Daily Tag & Palette to a designated channel once a day at 10AM EST.\n\n",
             color=discord.Color.blue()
         )
         embed.add_field(name="Commands", value= 

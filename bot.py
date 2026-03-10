@@ -6,6 +6,7 @@ from colorama import Back, Fore, Style
 from discord.ext import commands
 
 from pyutils import Clogger
+from pyutils import get_env
 from utils.save_load import SaveLoad
 
 class Client(commands.Bot):
@@ -40,7 +41,12 @@ if __name__ == "__main__":
     client = Client()
     client.remove_command("help") # remove default help so I can add custom one. 
 
-    with open("data/key.json", "r") as file:
-        key = json.load(file)["key"]
+    key = get_env("LOSPEC_BOT_KEY", None)
+
+    if not key:
+        Clogger.error(
+            "No Discord key found. Please set the LOSPEC_BOT_KEY environment variable.",
+            exc=KeyError
+        )
 
     client.run(key)

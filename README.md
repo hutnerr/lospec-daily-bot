@@ -19,13 +19,12 @@ The project is licensed under the MIT License.
 - `/help` - Displays the command list and usage information.
 
 ## Setup
-To set this up locally, you would need to provide your own Discord key. You would have to have a `key.json` file within the data folder in root. You also would need to `pip install -r requirements.txt` which is also located in root.
+To set this up locally, you would need to provide your own Discord key. 
 
-```json
-{
-  "key": "DISCORD_API_KEY_GOES_HERE",
-}
-```
+The bot reads the key from an environment variable named `LOSPEC_BOT_KEY`, which you can set in a `.env` file in the root of the project.
+
+You also would need to `pip install -r requirements.txt` which is also located in root.
+
 
 ## Showcase
 <img width="570" height="431" alt="Example of Lospec Daily posted in Discord" src="https://github.com/user-attachments/assets/35636abb-bc5e-4a22-a790-ed0032373dbc"/>

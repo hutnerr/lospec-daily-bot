@@ -1,7 +1,7 @@
 import os
 import json
 
-from utils.clogger import Clogger
+from pyutils import Clogger
 from objects.server_config import ServerConfig
 
 DATA_PATH = os.path.join("data", "servers")

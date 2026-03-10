@@ -2,3 +2,4 @@ discord.py
 aiohttp
 colorama
 beautifulsoup4
+pyutils @ git+https://github.com/hutnerr/python-utils.git

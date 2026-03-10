@@ -3,7 +3,7 @@ import time
 
 from discord.ext import commands, tasks
 
-from utils.clogger import Clogger
+from pyutils import Clogger
 from utils.save_load import SaveLoad
 
 IMGPATH = os.path.join("assets", "lospec.png")

@@ -5,7 +5,7 @@ import discord
 from colorama import Back, Fore, Style
 from discord.ext import commands
 
-from utils.clogger import Clogger
+from pyutils import Clogger
 from utils.save_load import SaveLoad
 
 class Client(commands.Bot):

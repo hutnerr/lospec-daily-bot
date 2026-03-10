@@ -5,7 +5,7 @@ from discord import app_commands
 from discord.ext import commands
 
 from objects.server_config import ServerConfig
-from utils.clogger import Clogger
+from pyutils import Clogger
 from utils.data_getter import getDailyData
 from utils.save_load import SaveLoad
 

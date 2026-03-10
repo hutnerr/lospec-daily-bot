@@ -5,7 +5,7 @@ import discord
 from colorama import Back, Fore, Style
 from discord.ext import commands
 
-from pyutils import Clogger
+from pyutils import Clogger, CloggerConfig
 from pyutils import get_env
 from utils.save_load import SaveLoad
 
@@ -40,6 +40,13 @@ class Client(commands.Bot):
 if __name__ == "__main__":
     client = Client()
     client.remove_command("help") # remove default help so I can add custom one. 
+
+    Clogger.config = CloggerConfig(
+        simplify_timestamps=False,
+        show_source_file=False,
+        write_to_file=True,
+        log_file_path="bot.log",
+    )
 
     key = get_env("LOSPEC_BOT_KEY", None)
 

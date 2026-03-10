@@ -8,8 +8,8 @@ from utils.save_load import SaveLoad
 
 IMGPATH = os.path.join("assets", "lospec.png")
 
-# 10:00 AM EST daily
-DESIRED_HOUR = 10
+# 08:00 AM EST daily
+DESIRED_HOUR = 8
 DESIRED_MINUTE = 0
 
 class Looper(commands.Cog):
@@ -19,8 +19,10 @@ class Looper(commands.Cog):
             
         self.mainloop.start()
         self.saveServerConfigs.start()
+        Clogger.info("Looper Cog initialized and loops started")
     
     # save all server data once a day
+    # just in case 
     @tasks.loop(hours=24)
     async def saveServerConfigs(self) -> None:
         SaveLoad.saveAllData(self.serverConfigs)
@@ -60,7 +62,7 @@ class Looper(commands.Cog):
                 continue
             try:
                 await channel.send(embed=embed)
-                # Clogger.debug(f"Sent daily post to server {serverConfig.serverID} in channel {serverConfig.channelID}")
+                Clogger.debug(f"Sent daily post to server {serverConfig.serverID} in channel {serverConfig.channelID}")
             except Exception as e:
                 Clogger.warn(f"Failed to send message to server {serverConfig.serverID} in channel {serverConfig.channelID}: {str(e)}")
 

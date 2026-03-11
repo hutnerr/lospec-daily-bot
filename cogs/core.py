@@ -97,7 +97,7 @@ class CoreCog(commands.Cog):
             color=discord.Color.blue()
         )
         embed.set_thumbnail(url="attachment://rat-pfp.png")
-        Clogger.info(f"About command executed for server {interaction.guild.name}({interaction.guild_id})")
+        Clogger.action(f"About command executed for server {interaction.guild.name}({interaction.guild_id})")
         await interaction.response.send_message(embed=embed, files=[discord.File(RAT_ICON_PATH, filename="rat-pfp.png")])
 
     # help: displays the simple help message for the bot

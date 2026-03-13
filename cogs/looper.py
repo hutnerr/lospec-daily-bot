@@ -62,7 +62,8 @@ class Looper(commands.Cog):
                 continue
             try:
                 await channel.send(embed=embed)
-                Clogger.debug(f"Sent daily post to server {serverConfig.serverID} in channel {serverConfig.channelID}")
+                serverName = self.client.get_guild(int(serverConfig.serverID)).name if self.client.get_guild(int(serverConfig.serverID)) else "Unknown Server"
+                Clogger.debug(f"Sent daily post to server {serverName} ({serverConfig.serverID}) in channel {serverConfig.channelID}")
             except Exception as e:
                 Clogger.warn(f"Failed to send message to server {serverConfig.serverID} in channel {serverConfig.channelID}: {str(e)}")
 

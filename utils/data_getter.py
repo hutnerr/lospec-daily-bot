@@ -16,10 +16,8 @@ async def getDailyData() -> tuple[str, str] | None:
             html = await response.text()
             soup = BeautifulSoup(html, "html.parser")
 
-            # tag = soup.find("div", class_="daily tag")
             tags = soup.find_all("h1", class_="daily-name")
             tag = tags[1] if len(tags) > 1 else None
-            Clogger.debug(tag)
             if not tag:
                 Clogger.error("Could not find daily tag on the page.")
                 return

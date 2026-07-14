@@ -45,6 +45,10 @@ class CoreCog(commands.Cog):
     # setchannel: command to set the channel for bot messages
     @app_commands.command(name='setchannel', description='Sets the output channel for bot messages')
     async def setChannel(self, interaction: discord.Interaction):
+        if interaction.guild is None:
+            await interaction.response.send_message("This command can only be used in a server.", ephemeral=True)
+            return
+        
         serverID = str(interaction.guild_id)
         channelID = interaction.channel_id
 
@@ -60,12 +64,18 @@ class CoreCog(commands.Cog):
             color=discord.Color.green()
         )
         embed.set_footer(text="The bot is enabled by default. Use /toggle to enable/disable messages or check the current config with /serverconfig.")
-        Clogger.action(f"Set channel for server {interaction.guild.name}({serverID}) to {channelID}")
+        if interaction.guild is not None:
+            Clogger.action(f"Set channel for server {interaction.guild.name}({serverID}) to {channelID}")
+        
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
     # toggle: enables / disables the bot messages for the set channel
     @app_commands.command(name='toggle', description='Enables or disables the daily loop messages')
     async def toggle(self, interaction: discord.Interaction):
+        if interaction.guild is None:
+            await interaction.response.send_message("This command can only be used in a server.", ephemeral=True)
+            return
+        
         serverID = str(interaction.guild_id)
 
         if serverID not in self.serverConfigs:
@@ -83,7 +93,9 @@ class CoreCog(commands.Cog):
             color=discord.Color.green() if not currentStatus else discord.Color.red()
         )
         embed.set_footer(text="Don't forget to set the channel with /setchannel or check the current config with /serverconfig.")
-        Clogger.action(f"Toggle status for server {interaction.guild.name}({serverID}) to {not currentStatus}")
+        if interaction.guild is not None:
+            Clogger.action(f"Toggle status for server {interaction.guild.name}({serverID}) to {not currentStatus}")
+        
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
     # about: notes that this is not affiliated with lospec in any way. links to github, maybe kofi
@@ -97,7 +109,9 @@ class CoreCog(commands.Cog):
             color=discord.Color.blue()
         )
         embed.set_thumbnail(url="attachment://rat-pfp.png")
-        Clogger.action(f"About command executed for server {interaction.guild.name}({interaction.guild_id})")
+        if interaction.guild is not None:
+            Clogger.action(f"About command executed for server {interaction.guild.name}({interaction.guild_id})")
+        
         await interaction.response.send_message(embed=embed, files=[discord.File(RAT_ICON_PATH, filename="rat-pfp.png")])
 
     # help: displays the simple help message for the bot
@@ -117,7 +131,9 @@ class CoreCog(commands.Cog):
                         "`/help`: Displays this help information.", inline=False)
         embed.add_field(name="Error Reporting", value="If you encounter any issues or have suggestions, please report them on the [GitHub Issues Page](https://github.com/hutnerr/lospec-daily-bot/issues) or contact me directly [here](https://www.hunter-baker.com/pages/other/contact.html).", inline=False)
         embed.set_thumbnail(url="attachment://rat-pfp.png")
-        Clogger.action(f"Help command executed for server {interaction.guild.name}({interaction.guild_id})")
+        if interaction.guild is not None:
+            Clogger.action(f"Help command executed for server {interaction.guild.name}({interaction.guild_id})")
+            
         await interaction.response.send_message(embed=embed, files=[discord.File(RAT_ICON_PATH, filename="rat-pfp.png")], ephemeral=True)
 
     # getdailydata: command to manually get today's lospec daily data
@@ -126,11 +142,17 @@ class CoreCog(commands.Cog):
         embed = await self.buildDataEmbed()
         if embed is None:
             raise Exception("Failed to build daily data embed")
-        Clogger.action(f"Get daily data command executed for server {interaction.guild.name}({interaction.guild_id})")
+        if interaction.guild is not None:
+            Clogger.action(f"Get daily data command executed for server {interaction.guild.name}({interaction.guild_id})")
+            
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="serverconfig", description="Displays the current server configuration for the bot.")
     async def serverConfig(self, interaction: discord.Interaction):
+        if interaction.guild is None:
+            await interaction.response.send_message("This command can only be used in a server.", ephemeral=True)
+            return
+        
         serverID = str(interaction.guild_id)
         if serverID not in self.serverConfigs:
             await self.generateServerConfig(serverID, interaction.channel_id)
@@ -146,7 +168,9 @@ class CoreCog(commands.Cog):
         embed.add_field(name="Status", value=statusText, inline=False)
         embed.add_field(name="Channel", value=channelText, inline=False)
         embed.set_thumbnail(url=interaction.guild.icon.url if interaction.guild.icon else discord.Embed.Empty)
-        Clogger.action(f"Server config command executed for server {interaction.guild.name}({interaction.guild_id})")
+        if interaction.guild is not None:
+            Clogger.action(f"Server config command executed for server {interaction.guild.name}({interaction.guild_id})")
+            
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @setChannel.error

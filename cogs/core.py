@@ -129,7 +129,7 @@ class CoreCog(commands.Cog):
                         "`/serverconfig`: Displays the current server config for the bot.\n"
                         "`/about`: Displays information about the bot & its purpose.\n"
                         "`/help`: Displays this help information.", inline=False)
-        embed.add_field(name="Error Reporting", value="If you encounter any issues or have suggestions, please report them on the [GitHub Issues Page](https://github.com/hutnerr/lospec-daily-bot/issues) or contact me directly [here](https://www.hunter-baker.com/pages/other/contact.html).", inline=False)
+        embed.add_field(name="Error Reporting", value="If you encounter any issues or have suggestions, please report them on the [GitHub Issues Page](https://github.com/hutnerr/lospec-daily-bot/issues) or contact me directly [here](https://www.hunter-baker.com/pages/nav/contact.html).", inline=False)
         embed.set_thumbnail(url="attachment://rat-pfp.png")
         if interaction.guild is not None:
             Clogger.action(f"Help command executed for server {interaction.guild.name}({interaction.guild_id})")
@@ -185,7 +185,7 @@ class CoreCog(commands.Cog):
             description=f"An error occurred while processing the command: {str(error)}",
             color=discord.Color.red()
         )
-        errEmbed.add_field(name="Reporting", value="Please report this on the [GitHub Issues Page](https://github.com/hutnerr/lospec-daily-bot/issues) or contact me directly [here](https://www.hunter-baker.com/pages/other/contact.html).", inline=False)
+        errEmbed.add_field(name="Reporting", value="Please report this on the [GitHub Issues Page](https://github.com/hutnerr/lospec-daily-bot/issues) or contact me directly [here](https://www.hunter-baker.com/pages/nav/contact.html).", inline=False)
         Clogger.error(f"Error in {interaction.command.name} command: {str(error)}")
         await interaction.response.send_message(embed=errEmbed, ephemeral=True)
 

@@ -1,14 +1,14 @@
+> This project is completed and likely will not receive any new features, only maintenance updates.
+
 ## Overview
-This Discord bot automatically posts the daily prompt and palette from [Lospec Daily](https://lospec.com/dailies/) to a server, making it easy for consistent pixel art practice.
+A Discord bot that automatically posts the daily prompt and palette from [Lospec Daily](https://lospec.com/dailies/) to a server, making consistent pixel art practice easy.
 
-This is a personal project and has no official affiliation with Lospec.  
-The project is licensed under the MIT License.
-
-## Links
-- [More Information](https://www.hunter-baker.com/pages/projects/lospec-bot.html)
+**Links:**
 - [Invite Link](https://discord.com/oauth2/authorize?client_id=1457439367500009597&permissions=2147485696&integration_type=0&scope=bot)
 
-## Commands
+> View more about the project on its [showcase page](https://www.hunter-baker.com/pages/projects/lospec-bot.html).
+
+## Usage
 > To activate the bot, use `/setchannel` in the channel you want the bot to post to.
 
 - `/getdailydata` - Posts the current Lospec Daily challenge.
@@ -19,19 +19,24 @@ The project is licensed under the MIT License.
 - `/help` - Displays the command list and usage information.
 
 ## Setup
-To set this up locally, you would need to provide your own Discord key. 
+To run this locally, you need your own Discord key. The bot reads it from an environment variable, which you can set in a `.env` file in the root of the project.
 
-The bot reads the key from an environment variable named `LOSPEC_BOT_KEY`, which you can set in a `.env` file in the root of the project.
+```bash
+pip install -r requirements.txt
+```
 
-You also would need to `pip install -r requirements.txt` which is also located in root.
-
-
+```env
+LOSPEC_BOT_KEY=...
+```
 ## Showcase
-<img width="570" height="431" alt="Example of Lospec Daily posted in Discord" src="https://github.com/user-attachments/assets/35636abb-bc5e-4a22-a790-ed0032373dbc"/>
+<img src="https://github.com/user-attachments/assets/35636abb-bc5e-4a22-a790-ed0032373dbc" alt="Example of Lospec Daily posted in Discord">
+
+## License & Credits
+The project is licensed under the MIT License.
+
+This is a personal project and has no official affiliation with Lospec.
 
 ## Support
 If you found this project helpful or enjoyable, and want to support future work, you can buy me a coffee on Ko-fi
-<br>
-Totally optional, always appreciated.
-
+<br><br>
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S71TM9XT)

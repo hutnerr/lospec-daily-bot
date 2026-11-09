@@ -28,6 +28,7 @@ pip install -r requirements.txt
 ```env
 LOSPEC_BOT_KEY=...
 ```
+
 ## Showcase
 <img src="https://github.com/user-attachments/assets/35636abb-bc5e-4a22-a790-ed0032373dbc" alt="Example of Lospec Daily posted in Discord">
 

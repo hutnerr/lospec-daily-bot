@@ -6,7 +6,8 @@ from discord.ext import commands
 
 from objects.server_config import ServerConfig
 from pyutils import Clogger
-from utils.data_getter import getDailyData
+from utils import schedule
+from utils.data_getter import DailyData, DailyDataError, getDailyData
 from utils.save_load import SaveLoad
 
 RAT_ICON_PATH = os.path.join("assets", "rat-pfp.png")
@@ -24,14 +25,17 @@ class CoreCog(commands.Cog):
         SaveLoad.saveData(self.serverConfigs, serverID)
         Clogger.info(f"Generated new server config for server {serverID} with channel {channelID}")
 
-    @staticmethod
-    async def buildDataEmbed() -> discord.Embed | None:
-        data = await getDailyData()
-        if data is None:
-            Clogger.error("Failed to get daily data")
-            return None
+    # the bot was removed from a server, its config is useless now
+    @commands.Cog.listener()
+    async def on_guild_remove(self, guild: discord.Guild) -> None:
+        serverID = str(guild.id)
+        if serverID in self.serverConfigs:
+            Clogger.info(f"Removed from server {guild.name}({serverID}), deleting its config")
+            SaveLoad.deleteData(self.serverConfigs, serverID)
 
-        topic, palleteURL = data
+    @staticmethod
+    def buildDataEmbed(data: DailyData) -> discord.Embed:
+        topic, palleteURL = data.tag, data.palleteURL
         embed = discord.Embed(
             title="Lospec Daily",
             url="https://lospec.com/dailies/",
@@ -103,7 +107,7 @@ class CoreCog(commands.Cog):
     async def about(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title="About",
-            description="This bot posts the Lospec Daily Palette to a designated channel once a day at noon.\n\n"
+            description=f"This bot posts the Lospec Daily Palette to a designated channel once a day at {schedule.POST_TIME_TEXT}.\n\n"
                         "This bot is not affiliated with Lospec in any way. I created this bot as a personal project to help my friends and I improve at pixel art.\n\n"
                         "**Source Code**: [GitHub](https://github.com/hutnerr/lospec-daily-bot)\n",
             color=discord.Color.blue()
@@ -119,9 +123,10 @@ class CoreCog(commands.Cog):
     async def help(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title="Bot Help",
-            description="This bot posts the Lospec Daily Tag & Palette to a designated channel once a day at 10AM EST.\n\n",
+            description=f"This bot posts the Lospec Daily Tag & Palette to a designated channel once a day at {schedule.POST_TIME_TEXT}.\n\n",
             color=discord.Color.blue()
         )
+        embed.add_field(name="Setup", value="Run `/setchannel` in the channel you want the daily posted to. That's it, posts are enabled automatically.", inline=False)
         embed.add_field(name="Commands", value= 
                         "`/getdailydata`: Displays today's Lospec Daily.\n"
                         "`/toggle`: Enables or disables the daily loop messages.\n"
@@ -139,13 +144,26 @@ class CoreCog(commands.Cog):
     # getdailydata: command to manually get today's lospec daily data
     @app_commands.command(name="getdailydata", description="Displays today's Lospec Daily.")
     async def getDailyDataCommand(self, interaction: discord.Interaction):
-        embed = await self.buildDataEmbed()
-        if embed is None:
-            raise Exception("Failed to build daily data embed")
+        # scraping lospec can take longer than the 3 seconds discord gives us to respond
+        await interaction.response.defer()
+
+        try:
+            data = await getDailyData()
+        except DailyDataError:
+            await interaction.followup.send("Couldn't get today's Lospec Daily right now, please try again later.", ephemeral=True)
+            return
+
+        embed = self.buildDataEmbed(data)
+
+        # nudge servers that haven't set up daily posts yet
+        config = self.serverConfigs.get(str(interaction.guild_id))
+        if interaction.guild is not None and (config is None or not config.enabled):
+            embed.set_footer(text="Want this posted here every day? Run /setchannel in the channel you want it in.")
+
         if interaction.guild is not None:
             Clogger.action(f"Get daily data command executed for server {interaction.guild.name}({interaction.guild_id})")
             
-        await interaction.response.send_message(embed=embed)
+        await interaction.followup.send(embed=embed)
 
     @app_commands.command(name="serverconfig", description="Displays the current server configuration for the bot.")
     async def serverConfig(self, interaction: discord.Interaction):
@@ -167,7 +185,7 @@ class CoreCog(commands.Cog):
         )
         embed.add_field(name="Status", value=statusText, inline=False)
         embed.add_field(name="Channel", value=channelText, inline=False)
-        embed.set_thumbnail(url=interaction.guild.icon.url if interaction.guild.icon else discord.Embed.Empty)
+        embed.set_thumbnail(url=interaction.guild.icon.url if interaction.guild.icon else None)
         if interaction.guild is not None:
             Clogger.action(f"Server config command executed for server {interaction.guild.name}({interaction.guild_id})")
             
@@ -186,8 +204,17 @@ class CoreCog(commands.Cog):
             color=discord.Color.red()
         )
         errEmbed.add_field(name="Reporting", value="Please report this on the [GitHub Issues Page](https://github.com/hutnerr/lospec-daily-bot/issues) or contact me directly [here](https://www.hunter-baker.com/pages/nav/contact.html).", inline=False)
-        Clogger.error(f"Error in {interaction.command.name} command: {str(error)}")
-        await interaction.response.send_message(embed=errEmbed, ephemeral=True)
+        commandName = interaction.command.name if interaction.command else "unknown"
+        Clogger.error(f"Error in {commandName} command: {str(error)}")
+
+        # the command may have already responded or deferred, and the interaction may have expired
+        try:
+            if interaction.response.is_done():
+                await interaction.followup.send(embed=errEmbed, ephemeral=True)
+            else:
+                await interaction.response.send_message(embed=errEmbed, ephemeral=True)
+        except discord.HTTPException as e:
+            Clogger.warn(f"Could not send error message for {commandName} command: {e}")
 
 async def setup(client: commands.Bot) -> None:
     await client.add_cog(CoreCog(client))

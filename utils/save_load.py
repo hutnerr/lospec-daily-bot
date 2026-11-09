@@ -5,6 +5,7 @@ from pyutils import Clogger
 from objects.server_config import ServerConfig
 
 DATA_PATH = os.path.join("data", "servers")
+STATE_PATH = os.path.join("data", "state.json")
 
 class SaveLoad:
     @staticmethod
@@ -18,6 +19,14 @@ class SaveLoad:
         with open(filepath, "w") as file:
             json.dump(config.toDict(), file, indent=4)
         Clogger.info(f"Saved server configuration for server ID: {id}")
+
+    @staticmethod
+    def deleteData(configs: dict, id: str):
+        configs.pop(id, None)
+        filepath = os.path.join(DATA_PATH, f"{id}.json")
+        if os.path.exists(filepath):
+            os.remove(filepath)
+        Clogger.info(f"Deleted server configuration for server ID: {id}")
 
     @staticmethod
     def saveAllData(configs: dict):
@@ -50,3 +59,21 @@ class SaveLoad:
 
         Clogger.info("Finished loading server configurations.")
         return configs
+
+    # bot-wide state, e.g. the last daily that was posted. survives restarts so
+    # we can catch up on a missed post and avoid posting the same daily twice
+    @staticmethod
+    def loadState() -> dict | None:
+        if not os.path.exists(STATE_PATH):
+            return None
+        try:
+            with open(STATE_PATH, "r") as file:
+                return json.load(file)
+        except (OSError, json.JSONDecodeError) as e:
+            Clogger.error(f"Failed to load bot state from {STATE_PATH}: {e}")
+            return None
+
+    @staticmethod
+    def saveState(state: dict):
+        with open(STATE_PATH, "w") as file:
+            json.dump(state, file, indent=4)
